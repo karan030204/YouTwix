@@ -19,3 +19,8 @@ Automatic server ko reload krne ke liye ek utility h nodemon usse install krdi h
 dotenv aur module ka ek panga chalta h to woh dekhna hoga
 we cannot use import('dotenv')
 we need to use required vaala syntax which is commonjs par hamne type module krdi h but chalega
+
+
+
+.prettierignore kis kis file me mereko prettier ko apply nahi krna
+- environment variables include mat karna
