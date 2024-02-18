@@ -10,13 +10,13 @@ User Upload Images -> Upload to Cloudinary directly
 devdependencies -> development ke time pe jo dependencies jo hoti h wahan pe use hoga 
 main production pe kuch problem nahi ayegi
 Production pe nahi leke jayenge isko 
---save-dev ( dev-dependencies install krni h jisko aapko production pe leke nahi jana h)
+--save-dev or -D ( dev-dependencies install krni h jisko aapko production pe leke nahi jana h)
 
 
 Automatic server ko reload krne ke liye ek utility h nodemon usse install krdi h woh index.js name ki file ko auto reload kr dega after making changes in the index.js file but hava me to karega nahi woh changes usko batana to padega usko kaise batayenge ham scripts me jaake 
 "dev" : "nodemon src/index.js"
 
-dotenv aur module ka ek panga chalta h to woh dekhna hoga
+dotenv aur modulejs ka ek panga chalta h to woh dekhna hoga
 we cannot use import('dotenv')
 we need to use required vaala syntax which is commonjs par hamne type module krdi h but chalega
 
