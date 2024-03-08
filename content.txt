@@ -24,3 +24,16 @@ we need to use required vaala syntax which is commonjs par hamne type module krd
 
 .prettierignore kis kis file me mereko prettier ko apply nahi krna
 - environment variables include mat karna
+
+
+
+Steps for writing backend in express : 
+
+- data modelling or object modelling
+- setup code ( till prettier, gitignore) with dependencies and everything
+- db setup and connection 
+- middlewares and configuration ( cors and cookieParser and BuiltIn Middleware )
+- utility for db function
+- (inside utility only) custom error (class Error) (standardised err response)
+- ApiError.js
+- ApiResponse.js
