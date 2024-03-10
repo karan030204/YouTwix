@@ -25,7 +25,18 @@ we need to use required vaala syntax which is commonjs par hamne type module krd
 .prettierignore kis kis file me mereko prettier ko apply nahi krna
 - environment variables include mat karna
 
+STATUSCODES
+- status codes ka already company me hota h predefined memo me likha hota h error iss status code me bhejenge ye sab
+- startups me hame khudko banana padega
 
+IMAGES AND VIDEOS
+- ye sab 3rd Party API Use karenge ham cloudinary ha kuch bhi aur woh link de dega hame 
+
+(IMP FEATURE)
+Watch History - ek bada hi next level complex banata h project ko
+mongoose-aggregate-paginate-v2 --- It allows us to write aggregation queries ( true power mongoDb ) - production ( aggregation pipeline ) - For writing complex queries
+
+//Sessions aur cookies dono use krenge ham
 
 Steps for writing backend in express : 
 
@@ -33,7 +44,8 @@ Steps for writing backend in express :
 - setup code ( till prettier, gitignore) with dependencies and everything
 - db setup and connection 
 - middlewares and configuration ( cors and cookieParser and BuiltIn Middleware )
-- utility for db function
+- utility for db function - Wrapper Function
 - (inside utility only) custom error (class Error) (standardised err response)
 - ApiError.js
 - ApiResponse.js
+- User models and Video Models and JWT ( mongoose-aggregate-paginate-v2) - bcrypt(hash pwd)
