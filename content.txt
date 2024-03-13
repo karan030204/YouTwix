@@ -47,7 +47,14 @@ http : data clear format me hi jaata h (hitesh chaudhary) -> hitesh chaudhary
 https : encryption ho jaata h data ko inbetween hide krne ke liye
 kahan actually baat krna h -> URL - location, URI - identifier, URN - name
 
+//VVVVVVVVVVVVVIIIIIIIIIMMMMMMMMMMMMPPPPPPPPP
+//IMPORT EXPORT KA KHEL
+jab export {route.js} --> tab jab import kr rhe ho tab -> import {route} from '../path' karna h 
+jab export default route.js --> tab jab import kr rhe ho tab -> import route from '../path' karna h
 Steps for writing backend in express : 
+IMPORT EXPORT ka syntax ache se likhiye
+jab import app from "./app.js" h toh you should do export default app NOT export default {app} -> wrong syntax 
+
 
 - data modelling or object modelling
 - setup code ( till prettier, gitignore) with dependencies and everything
@@ -67,4 +74,4 @@ Steps for writing backend in express :
 - jis bhi route se kuch files aane vaala h to uss route me upload.single('avtar') me mere storage method ko call karunga filename return kr dega locally bhi store ho jayega and filename bhi
 - http crash course
 // abhi tak sirf setup hua h backend code ka configuration settings hua h 
-
+- Register User 
