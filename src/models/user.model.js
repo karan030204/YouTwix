@@ -72,9 +72,9 @@ userSchema.methods.isPasswordCorrect = async function(password){
 //dono hi jwt tokens h
 userSchema.methods.generateAccessToken = function (){
     return jwt.sign(
-        //payload
+        //payload or data
         {
-            _id : this._id,
+            _id : this._id, // by default property of mongo
             email : this.email,
             username : this.username,
             fullname: this.fullname
@@ -89,7 +89,7 @@ userSchema.methods.generateAccessToken = function (){
     )
 }
 
-
+``
 userSchema.methods.generateRefreshToken= function (){
     return jwt.sign(
         //payload

@@ -1,7 +1,7 @@
 //custom API Error ko handle kr rhe h , error response bhejne ke liye
 
 class ApiError extends Error{
-    constructor(statusCode,message = "Something went Wrong",errors = [],statck = ""){
+    constructor(statusCode,message = "Something went Wrong",errors = [],stack = ""){
         //message to override krna hi krna h
         super(message)
         this.statusCode = statusCode
@@ -11,8 +11,8 @@ class ApiError extends Error{
         this.errors = errors
 
         //developer ke liye ki kahan exact error h issiliye error stack tree bana rhe h issiliye
-        if(statck){
-            this.stack = statck
+        if(stack){
+            this.stack = stack
         }else{
             Error.captureStackTrace(this, this.constructor)
         }

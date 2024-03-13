@@ -21,7 +21,6 @@ we cannot use import('dotenv')
 we need to use required vaala syntax which is commonjs par hamne type module krdi h but chalega
 
 
-
 .prettierignore kis kis file me mereko prettier ko apply nahi krna
 - environment variables include mat karna
 
@@ -33,15 +32,26 @@ IMAGES AND VIDEOS
 - ye sab 3rd Party API Use karenge ham cloudinary ha kuch bhi aur woh link de dega hame 
 
 (IMP FEATURE)
-Watch History - ek bada hi next level complex banata h project ko
+Watch History - ek bada hi next level complex banata h project ko aur advance level leke jaata h ye feature
 mongoose-aggregate-paginate-v2 --- It allows us to write aggregation queries ( true power mongoDb ) - production ( aggregation pipeline ) - For writing complex queries
 
 //Sessions aur cookies dono use krenge ham
+
+//Jane se pehle mujhe milkar jana - MIDDLEWARE
+
+//FILE UPLOAD
+utility fn ki bana denge ham ya middleware - reuse kr paaye issiliye ( same for image, same for pdf, same for video)
+
+//HTTP CRASH Course
+http : data clear format me hi jaata h (hitesh chaudhary) -> hitesh chaudhary
+https : encryption ho jaata h data ko inbetween hide krne ke liye
+kahan actually baat krna h -> URL - location, URI - identifier, URN - name
 
 Steps for writing backend in express : 
 
 - data modelling or object modelling
 - setup code ( till prettier, gitignore) with dependencies and everything
+
 - db setup and connection 
 - middlewares and configuration ( cors and cookieParser and BuiltIn Middleware )
 - utility for db function - Wrapper Function
@@ -49,3 +59,12 @@ Steps for writing backend in express :
 - ApiError.js
 - ApiResponse.js
 - User models and Video Models and JWT ( mongoose-aggregate-paginate-v2) - bcrypt(hash pwd)
+- File Upload ( backend hi krta h sab ) ( File handling - poora backend hi sambhalega )
+  (fir uske baad aap audio,pdf,word,video,photo, wagarh kuch bhi kr sakte h kuch bhi handle kr sakte h uske baad)
+- Cloudinary, express-fileupload, multer
+ multer ke through file upload hoga, direct cloudinary nahi hota woh ek aws service jaisa h, sdk hi hai 
+ file upload ( multer ) -> (temporary) local server -> cloudinary (local->server) 
+- jis bhi route se kuch files aane vaala h to uss route me upload.single('avtar') me mere storage method ko call karunga filename return kr dega locally bhi store ho jayega and filename bhi
+- http crash course
+// abhi tak sirf setup hua h backend code ka configuration settings hua h 
+
