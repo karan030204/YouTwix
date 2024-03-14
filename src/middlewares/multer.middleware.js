@@ -12,8 +12,7 @@ const storage = multer.diskStorage({
     }
   })
 
-  // task 
-  
+  // task
   export const upload = multer({ 
     storage,
  })
