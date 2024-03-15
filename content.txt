@@ -54,6 +54,14 @@ jab export default route.js --> tab jab import kr rhe ho tab -> import route fro
 IMPORT EXPORT ka syntax ache se likhiye
 jab import app from "./app.js" h toh you should do export default app NOT export default {app} -> wrong syntax 
 
+
+///POSTMAN
+Jab files wagarh bhejna h postman me to body->form-data bhejna padega to sirf json me hi nahi bhejenge har baar 
+// Cloudinary sexy cheez h sab cheez ka public url banake bhej deti h to ham kahin se bhi use kr sakte h usko to bohot beneficial h woh har jagah frontend me bhi aur kahin pe bhi kaam ayega ye cheez
+// postman collection -> new collection ( name -> save )
+// save as -> users/Register
+// No need to write localhost:8000 again and again you can use environment section in the top left sidebar and you can use that it in collection then make changes to No Environment -> youtube -chai or whatever name is there and now you can use {{server}}
+
 Steps for writing backend in express : 
 
 - data modelling or object modelling
@@ -75,4 +83,5 @@ Steps for writing backend in express :
 - http crash course
 // abhi tak sirf setup hua h backend code ka configuration settings hua h 
 - Register User 
-- 
+- How to use postman properly 
+

@@ -17,19 +17,19 @@ const registerUser = asyncHandler(async (req, res) => {
   // return res
 
   //destructuring
-  const { fullname, username, email, password } = req.body;
+  const { fullName, username, email, password } = req.body;
   console.log("email: ", email);
 
   //    if (fullname === "") {
   //         throw new ApiError(400, "Full Name is required")
   //    }
   if (
-    [fullname, username, email, password].some((field) => field?.trim() === "")
+    [fullName, username, email, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -37,10 +37,19 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or username already exist")
   }
 
+//   console.log(req.body);
+
  //req.files issiliye ayega kyunki hamne ek middleware laga rakha h route me jab me controller call kr rhe h jisse hame files ache se acces krne ko mile multer kya karta h locally file store krta h and jo file store kiya h uska original name mujhe return krta h 
 //bohot kuch hoga isme png jpg ye sab validation wagarh kr sakte h par abhi nahi karenge ye ham local path le rhe h abhi hamne cloudinary pe nahi dala h
+//optional checking
   const avatarLocalPath = req.files?.avatar[0]?.path
-  const coverImageLocalPath = req.files?.coverImage[0]?.path
+//   const coverImageLocalPath = req.files?.coverImage[0]?.path
+
+    let coverImageLocalPath;
+    //classic tareeka
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+    coverImageLocalPath = req.files.coverImage[0].path
+  }
 
   if (!avatarLocalPath) {
     throw new ApiError(400, " Avatar file is required")
@@ -55,7 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
  const user = await  User.create({
-    fullname,
+    fullName,
     avatar : avatar.url,
     coverImage:coverImage?.url || "",
     email,
@@ -76,7 +85,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
   
-  return res.status.json(
+  return res.status(200).json(
     new ApiResponse(200, createdUser, "user registered successfully")
   ) 
 
