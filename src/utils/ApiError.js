@@ -1,5 +1,4 @@
 //custom API Error ko handle kr rhe h , error response bhejne ke liye
-
 class ApiError extends Error{
     constructor(statusCode,message = "Something went Wrong",errors = [],stack = ""){
         //message to override krna hi krna h

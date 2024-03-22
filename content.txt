@@ -62,6 +62,17 @@ Jab files wagarh bhejna h postman me to body->form-data bhejna padega to sirf js
 // save as -> users/Register
 // No need to write localhost:8000 again and again you can use environment section in the top left sidebar and you can use that it in collection then make changes to No Environment -> youtube -chai or whatever name is there and now you can use {{server}}
 
+//TOKENS
+dono tokens same hi hote h but expires kab hote h utna hi difference h 
+access token -> short duration
+refresh token -> long duration 
+CONCEPT -> access token -> jahan pe authenticated ho to aap kar sakte ho
+lets understand if you are coming to any website and try to log in and your access token expiry is in 15 mins so after 15 mins your access token will get expired and you need to login again AT this time Refresh token comes into the picture that if user has its refresh token so user dont need to write password and login again and again he or she can log in with refresh token as we are storing it in database so user just need to hit the endpoint with the refresh token which he has and then we will verify with the tokens in the db and if it matches then we will give them the new access token and again same thing you can access the website  
+
+
+ACCESS TOKEN : short lived 
+REFRESH TOKEN : db me store karayenge and we will use this for refreshing the access token when 401 error occurred or when access token expired 
+
 Steps for writing backend in express : 
 
 - data modelling or object modelling
@@ -84,4 +95,8 @@ Steps for writing backend in express :
 // abhi tak sirf setup hua h backend code ka configuration settings hua h 
 - Register User 
 - How to use postman properly 
-
+- Access Token, Refresh Token, Middleware
+- middlewares majorly routes me use aate h 
+auth middleware se hi to pata chalega ki aap login ho ki nahi ho 
+- access token and refresh token concept and route for refreshing the access token
+- update controllers 

@@ -27,6 +27,7 @@ app.use(express.static("public"))
 
 //cookie-parser ka kaam itna hi h ki user ke browser me se cookie ko access kr paun aur set bhi kar paun mere server se user ke browser me itna hi kaam h cookie-parser ka
 app.use(cookieParser())
+// cookieParser ki help se ham -> .cookie access kr paa rhe h 
 
  
 //beech ki checking ko hi middleware bolte h 
