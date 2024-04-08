@@ -258,38 +258,124 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Current User fetched Successfully"));
+});
+
 const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
-
-  if(newPassword !== confirmPassword){
-    throw new ApiError(401,"Old Password and New Password did not match")
+  if (!(newPassword === confirmPassword)) {
+    //throw error
   }
 
-  const user = await User.findById(req.user?._id)
-  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
-  
-  if(!isPasswordCorrect){
-    throw new ApiError(400, "Invalid Old Password")
+  const user = await User.findById(req.user?._id);
+
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Invalid Old password");
   }
 
-  user.password = newPassword
-  //save karenge tab hook call hoa .pre vaala user model me h 
-  await user.save({validateBeforeSave : false})
+  //if your old password is correct then ...
+  user.password = newPassword;
 
+  await user.save({ validateBeforeSave: false });
 
   return res
-  .status(200)
-  .json(new ApiResponse(200,{},"Password changed Successfully"))
-  
-   
-
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password Changed Successfully"));
 });
 
-const getCurrentUser = asyncHandler(async(req,res)=>{
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullName, email } = req.body;
+
+  if (!fullName || !email) {
+    throw new ApiError(400, "fullName and email are required");
+  }
+
+  const user = User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      // yahan pe mongodb ke operators kaam me aate h
+      $set: {
+        fullName,
+        email,
+        // email : email,
+      },
+    },
+    //update hone ke baad jo information hoti h woh return hoti h to use ek variable me daal dete h
+    { new: true }
+  ).select("-password");
+
   return res
-  .status(200)
-  .json(new ApiResponse(200,req.user,""))
+    .status(200)
+    .json(new ApiResponse(200, {}, "fullName and email are changed"));
+});
+
+
+const updateUserAvatar = asyncHandler(async(req,res)=>{
+  const avatarLocalPath = req.file?.path
+
+  if(!avatarLocalPath){
+    throw new ApiError(400, "Avatar file missing")
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath)
+
+
+  if(!avatar.url){
+    throw new ApiError(400, "Error while uploading avatar")
+  }
+
+  const new_user = await User.findByIdAndUpdate(req.user?._id,{
+    $set : {
+      avatar : avatar.url
+    }
+  },{new : true}).select("-password")
+
+
+  return res.status(200).json(new ApiResponse(200,new_user,"Avatar Image Updated Successfully"))
+
+
+  
 })
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken,changeCurrentPassword };
+const updateCoverImage = asyncHandler(async(req,res)=>{
+  const coverLocalPath = req.file?.path
+
+  if(!coverLocalPath){
+    throw new ApiError(400, "Cover image missing")
+  }
+
+  const cover  = await uploadOnCloudinary(coverLocalPath)
+
+  if(!cover.url){
+    throw new ApiError(400, "Error While Uploading cover on Cloudinary")
+  }
+
+  const user_new  = await User.findByIdAndUpdate(req.user?._id,{
+    $set : {
+      coverImage : cover.url
+    }
+    // poora user object return hoga updated vaala yahan pe new:true likha h issilye
+  },{new : true}).select("-password")
+
+  return res.status(200).json(new ApiResponse(200,user_new,"Cover Image updated Successfully"))
+
+
+})
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
+  updateCoverImage,
+  updateUserAvatar
+};
