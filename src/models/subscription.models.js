@@ -1,19 +1,17 @@
-import mongoose,{Schema} from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
-//ye model ko use kahan karenge ye apne aap me ek complexity h 
-const subscriptionSchema = new Schema({
-
-    subscriber : {
-        type : Schema.Types.ObjectId, // one who is subscribing
-        ref : "User"
+const subscriptionSchema = new Schema(
+  {
+    subscriber: {
+      type: Schema.Types.ObjectId, // one who is subscribing
+      ref: "User",
     },
-    channel : {
-        type : Schema.Types.ObjectId, // one to whom 'subscriber' is subscribing 
-        ref : "User"
-    }
+    channel: {
+      type: Schema.Types.ObjectId, // one to whom it is subscribing
+      ref: "User",
+    },
+  },
+  { timestamps: true }
+);
 
-
-},{timestamps:true})
-
-
-export const Subcription = mongoose.model("Subscription",subscriptionSchema)
+export const Subscription = mongoose.model("subscription", subscriptionSchema);

@@ -30,6 +30,8 @@ router.route("/login").post(loginUser);
 //SECURED ROUTES
 //secured routes pehle verifyJWT kaam karega fir next() likha h issiliye usko pata chalega ki logoutUser access karo bohot sahi cheez h bhai sahab
 router.route("/logout").post(verifyJWT, logoutUser);
+
 //secured route h issiliye hamne middleware bhi add kr diya h jisme woh verify karega
 router.route("/refresh-token").post(refreshAccessToken)
+
 export default router;
