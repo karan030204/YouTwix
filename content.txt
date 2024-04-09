@@ -99,4 +99,26 @@ Steps for writing backend in express :
 - middlewares majorly routes me use aate h 
 auth middleware se hi to pata chalega ki aap login ho ki nahi ho 
 - access token and refresh token concept and route for refreshing the access token
-- update controllers 
+- update controllers
+- understanding subscription Schema
+- aggregate pipelines - joins ( stages )
+  Each stage operations will perform its operations on input documents and that particular input documents is passed to another stage 
+  [
+    {
+      //join karna h dono ko left join 
+      $lookup : {
+        from : "authors",
+        localField : "authors_id",
+        foreignField : "_id",
+        as : "author_details"
+      }
+    }, // ye ek pipeline h ( stage ) // this will return an array
+    {
+      $addFields : {
+        author_details : {
+          $arrayElemAt: ["$author_details",0] // seedhi first value chahiye mereko array ki 
+        }
+      }
+    }, // ye dusri pipeline h (stage)
+    {}, // ye teesri pipeline h (stage)
+  ]
