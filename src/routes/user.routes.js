@@ -1,9 +1,12 @@
 import { Router } from "express";
 import {
+  changeCurrentPassword,
+  getCurrentUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
   registerUser,
+  updateAccountDetails,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -32,6 +35,21 @@ router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 //secured route h issiliye hamne middleware bhi add kr diya h jisme woh verify karega
-router.route("/refresh-token").post(refreshAccessToken)
+router.route("/refresh-token").post(refreshAccessToken);
+
+router.route("/change-password").post(verifyJWT, changeCurrentPassword);
+router.route("/current-user").get(verifyJWT, getCurrentUser);
+router.route("/update-account").patch(verifyJWT, updateAccountDetails);
+router
+  .route("/avatar")
+  .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
+router
+  .route("/cover-image")
+  .patch(verifyJWT, upload.single("coverImage"), updateCoverImage);
+
+//params me se le rhe h username issiliye
+router.route("/c/:username").get(verifyJWT, getUserChannelProfile);
+
+router.route("/history").get(verifyJWT, getWatchHistory);
 
 export default router;
