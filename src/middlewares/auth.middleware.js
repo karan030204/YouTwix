@@ -3,7 +3,7 @@ import {ApiError} from "../utils/ApiError.js"
 import jwt from "jsonwebtoken"
 import {User} from "../models/user.model.js"
 
-//ye sirf verify karega user h ki nahi 
+//ye sirf verify karega user h ki nahi loggedIn h ki nahi
 export const verifyJWT = asyncHandler(async(req, _ ,next)=>{
     // ? -> optional
     //cookies ka access hamare paas req me h to ham usse cookies ka access le lenge

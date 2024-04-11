@@ -39,12 +39,14 @@ app.use(cookieParser())
 //routes import 
 
 import userRouter from "./routes/user.routes.js"
+import tweetRouter from "./routes/tweet.routes.js"
 
 
 //routes declaration
 // pehle ham app.get par tab ham controller aur routes yahin likh rhe the issiliye chal jaata tha
 //api hamari konsa version h ye sab cheeze batana zarooori h achi practice h standard practice h
 app.use("/api/v1/users",userRouter)
+app.use("/api/v1/tweets",tweetRouter)
 
 // http://localhost:8000/api/v1/users/register
 
