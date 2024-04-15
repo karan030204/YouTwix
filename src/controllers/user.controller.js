@@ -58,7 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or username already exist");
   }
 
-  //   console.log(req.body);
+  //console.log(req.body);
 
   //req.files issiliye ayega kyunki hamne ek middleware laga rakha h route me jab me controller call kr rhe h jisse hame files ache se acces krne ko mile multer kya karta h locally file store krta h and jo file store kiya h uska original name mujhe return krta h
   //bohot kuch hoga isme png jpg ye sab validation wagarh kr sakte h par abhi nahi karenge ye ham local path le rhe h abhi hamne cloudinary pe nahi dala h
@@ -319,195 +319,203 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "fullName and email are changed"));
 });
 
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
 
-const updateUserAvatar = asyncHandler(async(req,res)=>{
-  const avatarLocalPath = req.file?.path
-
-  if(!avatarLocalPath){
-    throw new ApiError(400, "Avatar file missing")
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file missing");
   }
 
-  //TODO: Delete Old Image : Assignment 
-  const avatar = await uploadOnCloudinary(avatarLocalPath)
+  //TODO: Delete Old Image : Assignment
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-
-  if(!avatar.url){
-    throw new ApiError(400, "Error while uploading avatar")
+  if (!avatar.url) {
+    throw new ApiError(400, "Error while uploading avatar");
   }
 
-  const new_user = await User.findByIdAndUpdate(req.user?._id,{
-    $set : {
-      avatar : avatar.url
-    }
-  },{new : true}).select("-password")
-
-
-  return res.status(200).json(new ApiResponse(200,new_user,"Avatar Image Updated Successfully"))
-
-
-  
-})
-
-const updateCoverImage = asyncHandler(async(req,res)=>{
-  const coverLocalPath = req.file?.path
-
-  if(!coverLocalPath){
-    throw new ApiError(400, "Cover image missing")
-  }
-
-  const cover  = await uploadOnCloudinary(coverLocalPath)
-
-  if(!cover.url){
-    throw new ApiError(400, "Error While Uploading cover on Cloudinary")
-  }
-
-  const user_new  = await User.findByIdAndUpdate(req.user?._id,{
-    $set : {
-      coverImage : cover.url
-    }
-    // poora user object return hoga updated vaala yahan pe new:true likha h issilye
-  },{new : true}).select("-password")
-
-  return res.status(200).json(new ApiResponse(200,user_new,"Cover Image updated Successfully"))
-
-
-})
-
-const getUserChannelProfile = asyncHandler(async(req,res)=>{
-    const {username} = req.params
-
-    if(!username?.trim()){
-        throw new ApiError(400, "username is missing")
-    }
-
-    // User.find({username})
-
-    //It is similar to joins in mysql
-    const channel = await User.aggregate([
-      {
-        $match : {
-          username: username?.toLowerCase()
-        }
-      }, // yahan pe abhi filter hoke mere paas ek document aya bas jo hamne username se match karvaya h woh vaala
-      {
-        //ye lookup se channel ke kitne subscribers h woh count honge kyunki tu aese doucments le rha h jisme channel ka name same ho 
-        $lookup : {
-          from : "subscriptions",
-          localField : "_id",
-          foreignField : "channel",
-          as : "subscribers"
-
-        }
-      },
-        //ye lookup se aap ne kisko kisko subscribe kiya h woh milenge, issiliye ham jahan jahan subscriber me same h usko le reh h fir count kr rhe h  
-      {
-        $lookup : {
-          from : "subscriptions",
-          localField : "_id",
-          foreignField : "subscriber",
-          as : "subscribedTo"
-        }
-      },
-      {
-        //originally user ke fields me add krdi kuch fields hamne jaise ki count wagarh and true aur false wagarh
-        $addFields : {
-          subscribersCount : {
-              $size : "$subscribers"
-          },
-          channelSubscribedToCount : {
-            $size : "$subscribedTo"
-          },
-          isSubscribed : {
-            $cond : {
-              if : { $in : [req.user?._id, "$subscribers.subscriber"]},
-              then : true,
-              else : false
-            }
-          }
-        }
-      },
-      {
-        //me saari values nahi dena chahta mujhe kuch kuch selected cheez hi wapis se deni h 
-        $project : {
-          fullName : 1,
-          username : 1,
-          subscribersCount : 1,
-          channelSubscribedToCount : 1,
-          isSubscribed : 1,
-          avatar : 1,
-          coverImage : 1,
-          email : 1
-        }
-      }
-    ])
-
-  
-    if(!channel?.length){
-      throw new ApiError(404, "channel does not exists")
-    }
-
-    console.log(channel);
-
-    return res
-    .status(200)
-    .json(new ApiResponse(200, channel[0], "User channel fetched Successfully"))
-    
-})
-
-//nested lookup 
-const getWatchHistory = asyncHandler(async(req,res)=>{
-  // yahan string milti h hamko hame mongo ki id nahi milti woh to mongoose id ko background me convert kr deta h id me 
-  // aggregation pipelines ka jitna code h woh directly jaata h to jahan jahan mongoose kaam krta h wahan directly id mil jayegi par jahan mongoose kaam nahi krta wahan use convert krna padta h 
-  const user  = await User.aggregate([
+  const new_user = await User.findByIdAndUpdate(
+    req.user?._id,
     {
-      $match : {
-        // _id : req.user._id // ye nahi chalega yahan pe kyunki isme string milega
-        _id : new mongoose.Types.ObjectId(req.user._id)
-
-      }
+      $set: {
+        avatar: avatar.url,
+      },
     },
-    {
-      $lookup : {
-        from : "videos",
-        localField : "watchHistory",
-        foreignField : "_id",
-        as : "watchHistory",
-        pipeline : [
-          {
-            $lookup : {
-              from : "users",
-              localField: "owner",
-              foreignField : "_id",
-              as : "owner",
-              pipeline : [
-                {
-                  $project : {
-                    fullName : 1,
-                    username : 1,
-                    avatar : 1
-                  }
-                }
-              ]
-            }
-          },
-          {
-            $addFields : {
-              owner : {
-                // $arrayElemAt : ["$owner",0]
-                $first : "$owner"
-              }
-            }
-          }
-        ]
-      }
-    }
-  ])
+    { new: true }
+  ).select("-password");
 
   return res
-  .status(200)
-  .json(new ApiResponse(200,user[0].watchHistory, "Watch History Fetched Succcessfully"))
-})
-  
+    .status(200)
+    .json(new ApiResponse(200, new_user, "Avatar Image Updated Successfully"));
+});
+
+const updateCoverImage = asyncHandler(async (req, res) => {
+  const coverLocalPath = req.file?.path;
+
+  if (!coverLocalPath) {
+    throw new ApiError(400, "Cover image missing");
+  }
+
+  const cover = await uploadOnCloudinary(coverLocalPath);
+
+  if (!cover.url) {
+    throw new ApiError(400, "Error While Uploading cover on Cloudinary");
+  }
+
+  const user_new = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        coverImage: cover.url,
+      },
+      // poora user object return hoga updated vaala yahan pe new:true likha h issilye
+    },
+    { new: true }
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user_new, "Cover Image updated Successfully"));
+});
+
+const getUserChannelProfile = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+
+  if (!username?.trim()) {
+    throw new ApiError(400, "username is missing");
+  }
+
+  // User.find({username})
+
+  //It is similar to joins in mysql
+  const channel = await User.aggregate([
+    {
+      $match: {
+        username: username?.toLowerCase(),
+      },
+    }, // yahan pe abhi filter hoke mere paas ek document aya bas jo hamne username se match karvaya h woh vaala
+    {
+      //ye lookup se channel ke kitne subscribers h woh count honge kyunki tu aese doucments le rha h jisme channel ka name same ho
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+    //ye lookup se aap ne kisko kisko subscribe kiya h woh milenge, issiliye ham jahan jahan subscriber me same h usko le reh h fir count kr rhe h
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "subscriber",
+        as: "subscribedTo",
+      },
+    },
+    {
+      //originally user ke fields me add krdi kuch fields hamne jaise ki count wagarh and true aur false wagarh
+      $addFields: {
+        subscribersCount: {
+          $size: "$subscribers",
+        },
+        channelSubscribedToCount: {
+          $size: "$subscribedTo",
+        },
+        isSubscribed: {
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    {
+      //me saari values nahi dena chahta mujhe kuch kuch selected cheez hi wapis se deni h
+      $project: {
+        fullName: 1,
+        username: 1,
+        subscribersCount: 1,
+        channelSubscribedToCount: 1,
+        isSubscribed: 1,
+        avatar: 1,
+        coverImage: 1,
+        email: 1,
+      },
+    },
+  ]);
+
+  if (!channel?.length) {
+    throw new ApiError(404, "channel does not exists");
+  }
+
+  console.log(channel);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, channel[0], "User channel fetched Successfully")
+    );
+});
+
+//nested lookup
+const getWatchHistory = asyncHandler(async (req, res) => {
+  // yahan string milti h hamko hame mongo ki id nahi milti woh to mongoose id ko background me convert kr deta h id me
+  // aggregation pipelines ka jitna code h woh directly jaata h to jahan jahan mongoose kaam krta h wahan directly id mil jayegi par jahan mongoose kaam nahi krta wahan use convert krna padta h
+  const user = await User.aggregate([
+    {
+      $match: {
+        // _id : req.user._id // ye nahi chalega yahan pe kyunki isme string milega
+        _id: new mongoose.Types.ObjectId(req.user._id),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "watchHistory",
+        foreignField: "_id",
+        as: "watchHistory",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    fullName: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              owner: {
+                // $arrayElemAt : ["$owner",0]
+                $first: "$owner",
+              },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user[0].watchHistory,
+        "Watch History Fetched Succcessfully"
+      )
+    );
+});
+
 export {
   registerUser,
   loginUser,
@@ -519,5 +527,5 @@ export {
   updateCoverImage,
   updateUserAvatar,
   getUserChannelProfile,
-  getWatchHistory
+  getWatchHistory,
 };

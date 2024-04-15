@@ -1,15 +1,13 @@
 // ---------------------- Promises ----------------------
-const  asyncHandler = (requestHandler) => {
-    return (req,res,next) => {
-        Promise.resolve(requestHandler(req,res,next)).catch(err=>next(err))
-    }
-}
-
+const asyncHandler = (requestHandler) => {
+  return (req, res, next) => {
+    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
+  };
+};
 
 // const asyncHandler = () => {}
 // const asyncHandler = (func) => {async ()=>{}}
 //Interesting High Order function - as a parameter bhi accept krte h aur return bhi krte h
-
 
 // ----------------- Try Catch ---------------------
 //Wrapper function - try catch
@@ -24,4 +22,4 @@ const  asyncHandler = (requestHandler) => {
 //     }
 // }
 
-export {asyncHandler}
+export { asyncHandler };

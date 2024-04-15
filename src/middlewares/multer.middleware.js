@@ -1,6 +1,6 @@
 import multer from "multer";
 
-//middleware h kyunki reusable ho and har jagah use krenge
+//Middleware h kyunki reusable ho and har jagah use krenge
 const storage = multer.diskStorage({
     //file -> saari files ye multer ke paas hi hota h
     destination: function (req, file, cb) {
@@ -13,6 +13,6 @@ const storage = multer.diskStorage({
   })
 
   // task
-  export const upload = multer({ 
+export const upload = multer({ 
     storage,
- })
+})

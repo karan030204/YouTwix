@@ -20,7 +20,7 @@ const router = Router();
 router.route("/register").post(
   upload.fields([
     {
-      // ye frontend aur backend engineer ke beech me discuss hona chahiye
+      // ye frontend  backend engineer ke beech me discuss hona chahiye
       name: "avatar",
       maxCount: 1,
     },
